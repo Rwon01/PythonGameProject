@@ -2,6 +2,7 @@ import pygame
 from sys import exit
 import math
 from settings import *
+from imagepaths import * 
 
 pygame.init()
 
@@ -11,13 +12,13 @@ pygame.display.set_caption("Top Down Shooter")
 clock = pygame.time.Clock()
 
 # Loads images
-background = pygame.image.load("background/ground.png").convert()
+background = pygame.image.load(background_path).convert()
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.pos = pygame.math.Vector2(PLAYER_START_X, PLAYER_START_Y)
-        self.image = pygame.transform.rotozoom(pygame.image.load("player/0.png").convert_alpha(), 0, PLAYER_SIZE)
+        self.image = pygame.transform.rotozoom(pygame.image.load(player_path).convert_alpha(), 0, PLAYER_SIZE)
         self.base_player_image = self.image
         self.hitbox_rect = self.base_player_image.get_rect(center = self.pos)
         self.rect = self.hitbox_rect.copy()
@@ -86,7 +87,7 @@ class Player(pygame.sprite.Sprite):
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y, angle):
         super().__init__()
-        self.image = pygame.image.load("bullet/1.png").convert_alpha()
+        self.image = pygame.image.load(bullet_path).convert_alpha()
         self.image = pygame.transform.rotozoom(self.image, 0, BULLET_SCALE)
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -115,7 +116,7 @@ class Bullet(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, position):
         super().__init__(enemy_group, all_sprites_group)
-        self.image = pygame.image.load("necromancer/hunt/0.png").convert_alpha()
+        self.image = pygame.image.load(player_path).convert_alpha()
         self.image = pygame.transform.rotozoom(self.image, 0, 2)
 
         self.rect = self.image.get_rect()
