@@ -6,15 +6,13 @@ from Player import Player
 from Enemy import Enemy
 from Projectile import Projectile
 
-global playerRed
 global playerBlue
 
 playerRed = (255, 0, 0)
 playerBlue = (0, 0, 255)
 
-
 pygame.init()
-size    = (800, 600)
+size    = (500, 500)
 BGCOLOR = (255, 255, 255)
 screen = pygame.display.set_mode(size)
 scoreFont = pygame.font.Font("fonts/UpheavalPro.ttf", 30)
@@ -107,6 +105,8 @@ def game_loop():
     lastEnemy = pygame.time.get_ticks()
     score = 0
     
+    bg = pygame.image.load("bg.png").convert_alpha()
+
     while hero.sprite.alive and player2.sprite.alive and not done:
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()
@@ -115,7 +115,8 @@ def game_loop():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return True
-        screen.fill(BGCOLOR)
+
+        screen.blit(bg, (0,0))
         
         process_keys(keys, hero, player2)
         process_mouse(mouse, hero, player2)
