@@ -13,7 +13,7 @@ screen = pygame.display.set_mode(size)
 scoreFont = pygame.font.Font("fonts/UpheavalPro.ttf", 30)
 healthFont = pygame.font.Font("fonts/OmnicSans.ttf", 50)
 healthRender = healthFont.render('z', True, pygame.Color('red'))
-pygame.display.set_caption("Top Down")
+pygame.display.set_caption("Top Down Shooter")
 
 done = False
 hero = pygame.sprite.GroupSingle(Player(screen.get_size()))
