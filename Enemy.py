@@ -19,9 +19,9 @@ class Enemy(pygame.sprite.Sprite):
         
         self.pos = list(pos)
         self.movementVector = [0, 0]
-        self.movementSpeed = 1.5
+        self.movementSpeed = 0.5
         self.lastShot = pygame.time.get_ticks()
-        self.weaponCooldown = 1500
+        self.weaponCooldown = 9000
         
     def move(self, enemies, playerPos, tDelta):
         self.movementVector = (playerPos[0] - self.pos[0],

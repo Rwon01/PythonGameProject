@@ -2,6 +2,9 @@ import pygame
 import math
 import Weapon
 
+
+
+
 PLAYERCOLOR = (255,   0,   0)
 
 def normalize_vector(vector):
@@ -12,10 +15,10 @@ def normalize_vector(vector):
 
 class Player(pygame.sprite.Sprite):
     projectiles = pygame.sprite.Group()
-    def __init__(self, screenSize):
+    def __init__(self, screenSize, color):
         super().__init__()
-        self.image = pygame.Surface([8, 8])
-        self.image.fill(PLAYERCOLOR)
+        self.image = pygame.Surface([16, 16])
+        self.image.fill(color)
         self.rect = self.image.get_rect(x=screenSize[0]//2,
                                         y=screenSize[1]//2)
         

@@ -6,6 +6,13 @@ from Player import Player
 from Enemy import Enemy
 from Projectile import Projectile
 
+global playerRed
+global playerBlue
+
+playerRed = (255, 0, 0)
+playerBlue = (0, 0, 255)
+
+
 pygame.init()
 size    = (800, 600)
 BGCOLOR = (255, 255, 255)
@@ -16,15 +23,17 @@ healthRender = healthFont.render('z', True, pygame.Color('red'))
 pygame.display.set_caption("Top Down Shooter")
 
 done = False
-hero = pygame.sprite.GroupSingle(Player(screen.get_size()))
+hero = pygame.sprite.GroupSingle(Player(screen.get_size(), playerBlue))
+player2 = pygame.sprite.GroupSingle(Player(screen.get_size(), playerRed))
 enemies = pygame.sprite.Group()
 lastEnemy = 0
 score = 0
 clock = pygame.time.Clock()
 
-def move_entities(hero, enemies, timeDelta):
+def move_entities(hero, enemies, player2, timeDelta):
     score = 0
     hero.sprite.move(screen.get_size(), timeDelta)
+    player2.sprite.move(screen.get_size(), timeDelta)
     for enemy in enemies:
         enemy.move(enemies, hero.sprite.rect.topleft, timeDelta)
         enemy.shoot(hero.sprite.rect.topleft)
@@ -43,8 +52,9 @@ def move_entities(hero, enemies, timeDelta):
             score += len(enemiesHit)
     return score
 
-def render_entities(hero, enemies):
+def render_entities(hero, enemies, player2):
     hero.sprite.render(screen)
+    player2.sprite.render(screen)
     for proj in Player.projectiles:
         proj.render(screen)
     for proj in Enemy.projectiles:
@@ -52,7 +62,8 @@ def render_entities(hero, enemies):
     for enemy in enemies:
         enemy.render(screen)
     
-def process_keys(keys, hero):
+    
+def process_keys(keys, hero, player2):
     if keys[pygame.K_w]:
         hero.sprite.movementVector[1] -= 1
     if keys[pygame.K_a]:
@@ -67,19 +78,36 @@ def process_keys(keys, hero):
         hero.sprite.equippedWeapon = hero.sprite.availableWeapons[1]
     if keys[pygame.K_3]:
         hero.sprite.equippedWeapon = hero.sprite.availableWeapons[2]
+    if keys[pygame.K_UP]:
+        player2.sprite.movementVector[1] -= 1
+    if keys[pygame.K_LEFT]:
+        player2.sprite.movementVector[0] -= 1
+    if keys[pygame.K_DOWN]:
+        player2.sprite.movementVector[1] += 1
+    if keys[pygame.K_RIGHT]:
+        player2.sprite.movementVector[0] += 1
+    if keys[pygame.K_1]:
+        player2.sprite.equippedWeapon = player2.sprite.availableWeapons[0]
+    if keys[pygame.K_2]:
+        player2.sprite.equippedWeapon = player2.sprite.availableWeapons[1]
+    if keys[pygame.K_3]:
+        player2.sprite.equippedWeapon = player2.sprite.availableWeapons[2]
+    if keys[pygame.K_SPACE]:
+        player2.sprite.shoot(pygame.mouse.get_pos())
         
-def process_mouse(mouse, hero):
+def process_mouse(mouse, hero, player2):
     if mouse[0]:
         hero.sprite.shoot(pygame.mouse.get_pos())
 
 def game_loop():
     done = False
-    hero = pygame.sprite.GroupSingle(Player(screen.get_size()))
+    hero = pygame.sprite.GroupSingle(Player(screen.get_size(), playerBlue))
+    player2 = pygame.sprite.GroupSingle(Player(screen.get_size(), playerRed))
     enemies = pygame.sprite.Group()
     lastEnemy = pygame.time.get_ticks()
     score = 0
     
-    while hero.sprite.alive and not done:
+    while hero.sprite.alive and player2.sprite.alive and not done:
         keys = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()
         currentTime = pygame.time.get_ticks()
@@ -89,11 +117,11 @@ def game_loop():
                 return True
         screen.fill(BGCOLOR)
         
-        process_keys(keys, hero)
-        process_mouse(mouse, hero)
+        process_keys(keys, hero, player2)
+        process_mouse(mouse, hero, player2)
         
         # Enemy spawning process
-        if lastEnemy < currentTime - 200 and len(enemies) < 50:
+        if lastEnemy < currentTime - 800 and len(enemies) < 10:
             spawnSide = random.random()
             if spawnSide < 0.25:
                 enemies.add(Enemy((0, random.randint(0, size[1]))))
@@ -105,8 +133,8 @@ def game_loop():
                 enemies.add(Enemy((random.randint(0, size[0]), size[1])))
             lastEnemy = currentTime
         
-        score += move_entities(hero, enemies, clock.get_time()/17)
-        render_entities(hero, enemies)
+        score += move_entities(hero, enemies, player2, clock.get_time()/17)
+        render_entities(hero, enemies, player2)
         
         # Health and score render
         for hp in range(hero.sprite.health):
