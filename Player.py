@@ -15,10 +15,9 @@ def normalize_vector(vector):
 
 class Player(pygame.sprite.Sprite):
     projectiles = pygame.sprite.Group()
-    def __init__(self, screenSize, color):
+    def __init__(self, screenSize, color, image_asset):
         super().__init__()
-        self.image = pygame.Surface([16, 16])
-        self.image.fill(color)
+        self.image = image_asset
         self.rect = self.image.get_rect(x=screenSize[0]//2,
                                         y=screenSize[1]//2)
         
@@ -53,8 +52,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.topleft = self.pos
         self.movementVector = [0, 0]
         
-    def shoot(self, mousePos):
-        self.equippedWeapon.shoot(self, mousePos)
+    def shoot(self, mousePos, color):
+        self.equippedWeapon.shoot(self, mousePos, color)
         
     def render(self, surface):
         surface.blit(self.image, self.pos)

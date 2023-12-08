@@ -6,12 +6,18 @@ from Player import Player
 from Enemy import Enemy
 from Projectile import Projectile
 
+
+
+
 global playerBlue
 
 playerRed = (255, 0, 0)
 playerBlue = (0, 0, 255)
 
 pygame.init()
+
+
+
 size    = (500, 500)
 BGCOLOR = (255, 255, 255)
 screen = pygame.display.set_mode(size)
@@ -20,9 +26,16 @@ healthFont = pygame.font.Font("fonts/OmnicSans.ttf", 50)
 healthRender = healthFont.render('z', True, pygame.Color('red'))
 pygame.display.set_caption("Top Down Shooter")
 
+p1_image = pygame.image.load("assets/p1.png").convert_alpha()
+p2_image = pygame.image.load("assets/p2.png").convert_alpha()
+enemy_image = pygame.image.load("assets/enemy.png").convert_alpha()
+
+
+
+
 done = False
-hero = pygame.sprite.GroupSingle(Player(screen.get_size(), playerBlue))
-player2 = pygame.sprite.GroupSingle(Player(screen.get_size(), playerRed))
+hero = pygame.sprite.GroupSingle(Player(screen.get_size(), playerBlue, p2_image))
+player2 = pygame.sprite.GroupSingle(Player(screen.get_size(), playerRed, p1_image))
 enemies = pygame.sprite.Group()
 lastEnemy = 0
 score = 0
@@ -91,16 +104,17 @@ def process_keys(keys, hero, player2):
     if keys[pygame.K_3]:
         player2.sprite.equippedWeapon = player2.sprite.availableWeapons[2]
     if keys[pygame.K_SPACE]:
-        player2.sprite.shoot(pygame.mouse.get_pos())
+        player2.sprite.shoot(pygame.mouse.get_pos(), (255, 0, 0))
         
 def process_mouse(mouse, hero, player2):
     if mouse[0]:
-        hero.sprite.shoot(pygame.mouse.get_pos())
+        hero.sprite.shoot(pygame.mouse.get_pos(), (0, 0, 255))
 
 def game_loop():
+    
     done = False
-    hero = pygame.sprite.GroupSingle(Player(screen.get_size(), playerBlue))
-    player2 = pygame.sprite.GroupSingle(Player(screen.get_size(), playerRed))
+    hero = pygame.sprite.GroupSingle(Player(screen.get_size(), playerBlue, p2_image))
+    player2 = pygame.sprite.GroupSingle(Player(screen.get_size(), playerRed, p1_image))
     enemies = pygame.sprite.Group()
     lastEnemy = pygame.time.get_ticks()
     score = 0
@@ -125,13 +139,13 @@ def game_loop():
         if lastEnemy < currentTime - 800 and len(enemies) < 10:
             spawnSide = random.random()
             if spawnSide < 0.25:
-                enemies.add(Enemy((0, random.randint(0, size[1]))))
+                enemies.add(Enemy((0, random.randint(0, size[1])), enemy_image))
             elif spawnSide < 0.5:
-                enemies.add(Enemy((size[0], random.randint(0, size[1]))))
+                enemies.add(Enemy((size[0], random.randint(0, size[1])), enemy_image))
             elif spawnSide < 0.75:
-                enemies.add(Enemy((random.randint(0, size[0]), 0)))
+                enemies.add(Enemy((random.randint(0, size[0]), 0), enemy_image))
             else:
-                enemies.add(Enemy((random.randint(0, size[0]), size[1])))
+                enemies.add(Enemy((random.randint(0, size[0]), size[1]), enemy_image))
             lastEnemy = currentTime
         
         score += move_entities(hero, enemies, player2, clock.get_time()/17)

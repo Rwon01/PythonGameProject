@@ -10,11 +10,10 @@ def normalize_vector(vector):
 
 class Enemy(pygame.sprite.Sprite):
     projectiles = pygame.sprite.Group()
-    def __init__(self, pos):
+    def __init__(self, pos, image_asset):
         super().__init__()
-        self.image = pygame.Surface([8, 8])
-        self.image.fill(pygame.Color('black'))
-        self.rect = self.image.get_rect(x=pos[0], y=pos[1])
+        self.image = image_asset
+        self.rect = self.image.get_rect()
         self.radius = self.rect.width / 2
         
         self.pos = list(pos)

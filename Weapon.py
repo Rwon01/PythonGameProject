@@ -30,7 +30,7 @@ class Pistol(Weapon):
         super().__init__()
         self.weaponCooldown = 250
     
-    def shoot(self, user, mousePos):
+    def shoot(self, user, mousePos, color):
         currentTime = pygame.time.get_ticks()
         if currentTime - self.lastShot > self.weaponCooldown:
             direction = (mousePos[0] - user.pos[0], mousePos[1] - user.pos[1]) \
@@ -38,7 +38,7 @@ class Pistol(Weapon):
             self.lastShot = currentTime
             user.projectiles.add(Projectile(user.pos,
                                             super().normalize_vector(direction),
-                                            5, 2000, (0, 0, 255)))
+                                            5, 2000, color))
             
 class Shotgun(Weapon):
     def __init__(self):
@@ -47,7 +47,7 @@ class Shotgun(Weapon):
         self.spreadArc = 90
         self.projectilesCount = 7
         
-    def shoot(self, user, mousePos):
+    def shoot(self, user, mousePos, color):
         currentTime = pygame.time.get_ticks()
         if currentTime - self.lastShot > self.weaponCooldown:
             direction = (mousePos[0] - user.pos[0], mousePos[1] - user.pos[1]) \
@@ -59,7 +59,7 @@ class Shotgun(Weapon):
                 projDir = super().rotate_vector(direction, theta)
                 user.projectiles.add(Projectile(user.pos,
                                                 super().normalize_vector(projDir),
-                                                7, 500, (232, 144, 42)))
+                                                7, 500, color))
                 
 class MachineGun(Weapon):
     def __init__(self):
@@ -67,7 +67,7 @@ class MachineGun(Weapon):
         self.weaponCooldown = 100
         self.spreadArc = 25
         
-    def shoot(self, user, mousePos):
+    def shoot(self, user, mousePos, color):
         currentTime = pygame.time.get_ticks()
         if currentTime - self.lastShot > self.weaponCooldown:
             direction = (mousePos[0] - user.pos[0], mousePos[1] - user.pos[1]) \
@@ -77,4 +77,4 @@ class MachineGun(Weapon):
             projDir = super().rotate_vector(direction, theta)   
             user.projectiles.add(Projectile(user.pos,
                                             super().normalize_vector(projDir),
-                                            6, 1000, (194, 54, 16)))
+                                            6, 1000, color))
