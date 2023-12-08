@@ -2,9 +2,6 @@ import pygame
 import math
 import Weapon
 
-
-
-
 PLAYERCOLOR = (255,   0,   0)
 
 def normalize_vector(vector):

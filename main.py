@@ -6,17 +6,12 @@ from Player import Player
 from Enemy import Enemy
 from Projectile import Projectile
 
-
-
-
 global playerBlue
 
 playerRed = (255, 0, 0)
 playerBlue = (0, 0, 255)
 
 pygame.init()
-
-
 
 size    = (500, 500)
 BGCOLOR = (255, 255, 255)
@@ -31,12 +26,11 @@ p2_image = pygame.image.load("assets/p2.png").convert_alpha()
 enemy_image = pygame.image.load("assets/enemy.png").convert_alpha()
 
 
-
-
 done = False
 hero = pygame.sprite.GroupSingle(Player(screen.get_size(), playerBlue, p2_image))
 player2 = pygame.sprite.GroupSingle(Player(screen.get_size(), playerRed, p1_image))
 enemies = pygame.sprite.Group()
+enemies_2 = pygame.sprite.Group()
 lastEnemy = 0
 score = 0
 clock = pygame.time.Clock()
@@ -48,6 +42,10 @@ def move_entities(hero, enemies, player2, timeDelta):
     for enemy in enemies:
         enemy.move(enemies, hero.sprite.rect.topleft, timeDelta)
         enemy.shoot(hero.sprite.rect.topleft)
+    for enemy in enemies_2:
+        enemy.move(enemies, player2.sprite.rect.topleft, timeDelta)
+        enemy.shoot(player2.sprite.rect.topleft)
+
     for proj in Enemy.projectiles:
         proj.move(screen.get_size(), timeDelta)
         if pygame.sprite.spritecollide(proj, hero, False):
@@ -72,6 +70,9 @@ def render_entities(hero, enemies, player2):
         proj.render(screen)
     for enemy in enemies:
         enemy.render(screen)
+    for enemy in enemies_2:
+        enemy.render(screen)
+    
     
     
 def process_keys(keys, hero, player2):
@@ -139,9 +140,9 @@ def game_loop():
         if lastEnemy < currentTime - 800 and len(enemies) < 10:
             spawnSide = random.random()
             if spawnSide < 0.25:
-                enemies.add(Enemy((0, random.randint(0, size[1])), enemy_image))
+                enemies_2.add(Enemy((0, random.randint(0, size[1])), enemy_image))
             elif spawnSide < 0.5:
-                enemies.add(Enemy((size[0], random.randint(0, size[1])), enemy_image))
+                enemies_2.add(Enemy((size[0], random.randint(0, size[1])), enemy_image))
             elif spawnSide < 0.75:
                 enemies.add(Enemy((random.randint(0, size[0]), 0), enemy_image))
             else:
