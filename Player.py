@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
                                         y=screenSize[1]//2)
         
         self.pos = [screenSize[0] // 2, screenSize[1] // 2]
-        self.health = 3
+        self.health = 5
         self.alive = True
         self.movementVector = [0, 0]
         self.movementSpeed = 3

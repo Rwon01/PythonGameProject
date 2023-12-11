@@ -1,4 +1,8 @@
 import pygame
+import random
+
+lifeDifference = 200
+
 
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, source, target, speed, lifetime, color):
@@ -17,7 +21,7 @@ class Projectile(pygame.sprite.Sprite):
         self.createdAt = pygame.time.get_ticks()
         
     def move(self, surfaceSize, tDelta):
-        if pygame.time.get_ticks() > self.createdAt + self.lifetime:
+        if pygame.time.get_ticks() > self.createdAt + (self.lifetime + random.randint(-lifeDifference, lifeDifference)):
             self.kill()
         self.pos[0] += self.movementVector[0] * self.speed * tDelta
         self.pos[1] += self.movementVector[1] * self.speed * tDelta

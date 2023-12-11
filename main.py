@@ -35,7 +35,7 @@ lastEnemy = 0
 score = 0
 clock = pygame.time.Clock()
 
-def move_entities(hero, enemies, player2, timeDelta):
+def move_entities(hero, enemies, player2, timeDelta, enemies_2):
     score = 0
     hero.sprite.move(screen.get_size(), timeDelta)
     player2.sprite.move(screen.get_size(), timeDelta)
@@ -53,6 +53,11 @@ def move_entities(hero, enemies, player2, timeDelta):
             hero.sprite.health -= 1
             if hero.sprite.health <= 0:
                 hero.sprite.alive = False
+        if pygame.sprite.spritecollide(proj, player2, False):
+            proj.kill()
+            player2.sprite.health -= 1
+            if player2.sprite.health <= 0:
+                player2.sprite.alive = False
     for proj in Player.projectiles:
         proj.move(screen.get_size(), timeDelta)
         enemiesHit = pygame.sprite.spritecollide(proj, enemies, True)
@@ -137,7 +142,7 @@ def game_loop():
         process_mouse(mouse, hero, player2)
         
         # Enemy spawning process
-        if lastEnemy < currentTime - 800 and len(enemies) < 10:
+        if lastEnemy < currentTime - 3000 and len(enemies) < 5:
             spawnSide = random.random()
             if spawnSide < 0.25:
                 enemies_2.add(Enemy((0, random.randint(0, size[1])), enemy_image))
@@ -149,7 +154,7 @@ def game_loop():
                 enemies.add(Enemy((random.randint(0, size[0]), size[1]), enemy_image))
             lastEnemy = currentTime
         
-        score += move_entities(hero, enemies, player2, clock.get_time()/17)
+        score += move_entities(hero, enemies, player2, clock.get_time()/17, enemies_2)
         render_entities(hero, enemies, player2)
         
         # Health and score render
@@ -161,6 +166,14 @@ def game_loop():
         scoreRect.top = 20
         screen.blit(scoreRender, scoreRect)
         
+        for hp in range(player2.sprite.health):
+            screen.blit(healthRender, (15 + hp*35, 75))
+        scoreRender = scoreFont.render(str(score), True, pygame.Color('black'))
+        scoreRect = scoreRender.get_rect()
+        scoreRect.right = size[0] - 20
+        scoreRect.top = 20
+        screen.blit(scoreRender, scoreRect)
+
         pygame.display.flip()
         clock.tick(120)
 
